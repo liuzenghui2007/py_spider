@@ -17,4 +17,16 @@ scrapy crawl itcast -o teachers.xml
 items.py只是定义类字段
 
 
- scrapy crawl hypeauditor -L DEBUG
+scrapy crawl hypeauditor -L DEBUG
+scrapy crawl hypeauditor -o h.csv
+
+
+
+#!/bin/bash
+# 环境名
+ENV_NAME=spider
+# 创建虚拟环境并安装 Scrapy
+conda create --name $ENV_NAME python=3.13 -y && \
+conda activate $ENV_NAME && \
+conda install -c conda-forge scrapy -y && \
+scrapy --version
