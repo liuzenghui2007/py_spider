@@ -12,3 +12,6 @@ scrapy crawl itcast -o teachers.csv
 xml格式
 
 scrapy crawl itcast -o teachers.xml
+
+业务逻辑都在spiders中
+items.py只是定义类字段
