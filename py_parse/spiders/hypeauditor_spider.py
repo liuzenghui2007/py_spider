@@ -6,6 +6,12 @@ class HypeAuditorSpider(scrapy.Spider):
     allowed_domains = ['hypeauditor.com']
     start_urls = ['https://hypeauditor.com/top-instagram-alcohol-united-states/']
 
+    def start_requests(self):
+        for url in self.start_urls:
+            yield scrapy.Request(url, callback=self.parse, headers={
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+            })
+
     def parse(self, response):
         # Save the response body to a file for inspection
         filename = "hype.html"
