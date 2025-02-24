@@ -20,6 +20,8 @@ items.py只是定义类字段
 scrapy crawl hypeauditor -L DEBUG
 scrapy crawl hypeauditor -o h.csv
 
+# 新建文件夹，抓取所有分类页面，分别保存到单独的文件
+scrapy crawl hypeauditor_category
 
 
 #!/bin/bash
@@ -30,3 +32,4 @@ conda create --name $ENV_NAME python=3.13 -y && \
 conda activate $ENV_NAME && \
 conda install -c conda-forge scrapy -y && \
 scrapy --version
+

@@ -14,11 +14,10 @@ class HypeAuditorSpider(scrapy.Spider):
 
     def parse(self, response):
         # Save the response body to a file for inspection
-        filename = "hype.html"
-        with open(filename, 'w') as f:
-            f.write(response.body.decode('utf-8'))
-        
-        self.logger.info(f"Saved response to {filename}")
+        # filename = "hype.html"
+        # with open(filename, 'w') as f:
+        #     f.write(response.body.decode('utf-8'))
+        # self.logger.info(f"Saved response to {filename}")
 
         # Extract data from the table rows
         for row in response.css('.table .row[data-v-bf890aa6]'):
