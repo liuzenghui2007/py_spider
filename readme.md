@@ -35,3 +35,5 @@ conda activate $ENV_NAME && \
 conda install -c conda-forge scrapy -y && \
 scrapy --version
 
+
+conda env create -f environment.yml

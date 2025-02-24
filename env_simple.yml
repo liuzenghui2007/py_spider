@@ -1,0 +1,13 @@
+name: spider
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.13
+  - scrapy
+  - twisted
+  - cryptography
+  - lxml
+  - pip
+  - wheel
+  - setuptools
