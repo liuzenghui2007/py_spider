@@ -3,7 +3,7 @@ from py_parse.items import HypeAuditorItem
 import csv
 
 class HypeAuditorCategorySpider(scrapy.Spider):
-    name = 'hypeauditor_category'
+    name = 'hypeauditor_category_merge'
     allowed_domains = ['hypeauditor.com']
     
     categories = {
