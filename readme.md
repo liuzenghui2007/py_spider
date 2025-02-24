@@ -18,6 +18,8 @@ items.py只是定义类字段
 
 
 scrapy crawl hypeauditor -L DEBUG
+
+# 抓取一个页面
 scrapy crawl hypeauditor -o h.csv
 
 # 新建文件夹，抓取所有分类页面，分别保存到单独的文件
@@ -25,6 +27,10 @@ scrapy crawl hypeauditor_category
 
 # 合并49个分类的结果，保存到一个csv，最后一列标注category
 scrapy crawl hypeauditor_category_merge
+
+# proxy作为可选参数
+scrapy crawl hypeauditor -s USE_PROXIES=True
+
 
 #!/bin/bash
 # 环境名

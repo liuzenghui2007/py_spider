@@ -54,9 +54,12 @@ COOKIES_ENABLED = True
 #}
 
 # Enable or disable downloader middlewares
+USE_PROXIES = False
+
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
+    'py_parse.middlewares.ProxyMiddleware': 543,
     # diasable proxy
     # 'scrapy_proxies.RandomProxy': 100,
     # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,

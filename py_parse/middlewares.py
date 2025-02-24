@@ -8,6 +8,10 @@ from scrapy import signals
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
+import csv
+import random
+from scrapy.exceptions import NotConfigured
+
 
 class PyParseSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -46,7 +50,7 @@ class PyParseSpiderMiddleware:
     def process_start_requests(self, start_requests, spider):
         # Called with the start requests of the spider, and works
         # similarly to the process_spider_output() method, except
-        # that it doesn’t have a response associated.
+        # that it doesn't have a response associated.
 
         # Must return only requests (not items).
         for r in start_requests:
@@ -101,3 +105,30 @@ class PyParseDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+
+class ProxyMiddleware:
+    def __init__(self, use_proxies):
+        if not use_proxies:
+            raise NotConfigured
+        self.proxies = self.load_proxies()
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        use_proxies = crawler.settings.getbool('USE_PROXIES', False)
+        return cls(use_proxies)
+
+    def load_proxies(self):
+        proxies = []
+        with open('proxies.csv', newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if row['status'] == 'Working':
+                    proxies.append(f"http://{row['ip']}:{row['port']}")
+        return proxies
+
+    def process_request(self, request, spider):
+        if self.proxies:
+            proxy = random.choice(self.proxies)
+            request.meta['proxy'] = proxy
+            spider.logger.info(f"Using proxy: {proxy}")
