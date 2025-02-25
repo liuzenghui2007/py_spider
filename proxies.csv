@@ -1,9 +1,9 @@
 ip,port,country,anonymity,https,status,origin,latency
-51.68.175.56,1080,France,elite proxy,yes,Working,51.68.175.56,3.13 seconds
+51.68.175.56,1080,France,elite proxy,yes,Not Working,51.68.175.56,3.13 seconds
 3.21.101.158,3128,United States,elite proxy,yes,Working,18.117.140.15,0.62 seconds
 8.210.38.209,1081,Hong Kong,elite proxy,yes,Not Working,,
-125.87.82.62,2324,China,anonymous,yes,Working,125.87.82.62,2.04 seconds
-5.39.71.122,80,France,elite proxy,yes,Working,5.39.71.122,3.59 seconds
+125.87.82.62,2324,China,anonymous,yes,Not Working,125.87.82.62,2.04 seconds
+5.39.71.122,80,France,elite proxy,yes,Not Working,5.39.71.122,3.59 seconds
 47.252.29.28,11222,United States,anonymous,yes,Not Working,,
 119.96.72.199,59394,China,anonymous,yes,Not Working,,
 44.219.175.186,80,United States,elite proxy,yes,Working,54.234.125.156,0.64 seconds
@@ -41,30 +41,30 @@ ip,port,country,anonymity,https,status,origin,latency
 13.208.56.180,80,Japan,elite proxy,yes,Working,13.208.128.107,0.19 seconds
 13.56.192.187,80,United States,elite proxy,yes,Working,52.53.188.114,0.63 seconds
 54.67.125.45,3128,United States,elite proxy,yes,Working,52.53.188.114,0.35 seconds
-37.187.25.85,80,France,elite proxy,yes,Not Working,,
+37.187.25.85,80,France,elite proxy,yes,Working,,
 44.195.247.145,80,United States,elite proxy,yes,Working,54.234.125.156,0.55 seconds
 13.36.87.105,3128,France,elite proxy,yes,Working,13.38.39.83,0.36 seconds
 13.38.176.104,3128,France,elite proxy,yes,Working,13.38.39.83,0.49 seconds
 146.0.78.109,1080,Netherlands,elite proxy,yes,Not Working,,
 172.233.78.254,7890,Japan,elite proxy,yes,Not Working,,
-103.237.144.232,1311,Vietnam,elite proxy,yes,Working,103.237.144.232,8.14 seconds
+103.237.144.232,1311,Vietnam,elite proxy,yes,Not Working,103.237.144.232,8.14 seconds
 8.210.232.181,7888,Hong Kong,elite proxy,yes,Not Working,,
-3.78.92.159,3128,Germany,elite proxy,yes,Working,3.79.36.246,0.43 seconds
-3.123.150.192,80,Germany,elite proxy,yes,Working,3.79.36.246,0.33 seconds
-3.127.121.101,80,Germany,elite proxy,yes,Working,3.79.36.246,0.44 seconds
-3.127.62.252,80,Germany,elite proxy,yes,Working,3.79.36.246,0.36 seconds
-3.122.84.99,3128,Germany,elite proxy,yes,Working,3.79.36.246,0.34 seconds
+3.78.92.159,3128,Germany,elite proxy,yes,Not Working,3.79.36.246,0.43 seconds
+3.123.150.192,80,Germany,elite proxy,yes,Not Working,3.79.36.246,0.33 seconds
+3.127.121.101,80,Germany,elite proxy,yes,Not Working,3.79.36.246,0.44 seconds
+3.127.62.252,80,Germany,elite proxy,yes,Not Working,3.79.36.246,0.36 seconds
+3.122.84.99,3128,Germany,elite proxy,yes,Not Working,3.79.36.246,0.34 seconds
 13.36.113.81,3128,France,elite proxy,yes,Working,13.38.39.83,0.37 seconds
 13.37.89.201,80,France,elite proxy,yes,Working,13.38.39.83,0.36 seconds
 52.67.10.183,80,Brazil,elite proxy,yes,Working,15.228.100.177,0.80 seconds
-3.126.147.182,80,Germany,elite proxy,yes,Working,3.79.36.246,0.57 seconds
-200.174.198.86,8888,Brazil,anonymous,yes,Working,"10.237.0.70, 200.174.198.108",2.70 seconds
+3.126.147.182,80,Germany,elite proxy,yes,Not Working,3.79.36.246,0.57 seconds
+200.174.198.86,8888,Brazil,anonymous,yes,Not Working,"10.237.0.70, 200.174.198.108",2.70 seconds
 13.36.104.85,80,France,elite proxy,yes,Working,13.38.39.83,0.50 seconds
 158.160.52.208,8090,Russian Federation,elite proxy,yes,Not Working,,
 113.160.133.32,8080,Vietnam,elite proxy,yes,Not Working,,
 18.228.149.161,80,Brazil,elite proxy,yes,Working,15.228.100.177,2.27 seconds
 13.38.153.36,80,France,elite proxy,yes,Working,13.38.39.83,0.42 seconds
-58.187.230.151,12001,Vietnam,elite proxy,yes,Working,58.186.65.82,5.21 seconds
+58.187.230.151,12001,Vietnam,elite proxy,yes,Not Working,58.186.65.82,5.21 seconds
 67.43.236.20,9957,Canada,elite proxy,yes,Not Working,,
 72.10.160.90,14233,Canada,elite proxy,yes,Not Working,,
 51.20.19.159,3128,Sweden,elite proxy,yes,Working,13.61.146.182,0.52 seconds
@@ -89,13 +89,13 @@ ip,port,country,anonymity,https,status,origin,latency
 3.136.29.104,80,United States,elite proxy,yes,Working,18.117.140.15,0.61 seconds
 49.0.87.62,8088,Thailand,elite proxy,yes,Not Working,,
 67.43.228.252,29825,Canada,elite proxy,yes,Not Working,,
-34.236.243.162,8888,United States,elite proxy,yes,Working,34.236.243.162,0.75 seconds
+34.236.243.162,8888,United States,elite proxy,yes,Not Working,34.236.243.162,0.75 seconds
 54.152.3.36,80,United States,elite proxy,yes,Working,75.101.192.26,0.58 seconds
 91.107.130.145,11000,Germany,elite proxy,yes,Not Working,,
-47.236.8.166,18080,Singapore,elite proxy,yes,Working,47.236.8.166,1.70 seconds
+47.236.8.166,18080,Singapore,elite proxy,yes,Not Working,47.236.8.166,1.70 seconds
 220.233.27.127,80,Australia,elite proxy,yes,Not Working,,
 65.108.203.37,18080,Finland,elite proxy,yes,Not Working,,
-8.217.124.178,49440,Hong Kong,anonymous,yes,Working,8.217.124.178,1.08 seconds
+8.217.124.178,49440,Hong Kong,anonymous,yes,Not Working,8.217.124.178,1.08 seconds
 31.31.77.228,6969,Czech Republic,elite proxy,yes,Not Working,,
 203.74.125.18,8888,Taiwan,anonymous,yes,Not Working,,
 129.154.225.163,8100,India,anonymous,yes,Not Working,,
