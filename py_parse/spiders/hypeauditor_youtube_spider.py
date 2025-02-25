@@ -3,10 +3,10 @@ from py_parse.items import HypeAuditorYouTubeCategoryItem
 import csv
 
 class HypeAuditorYouTubeCategoriesSpider(scrapy.Spider):
-    name = 'hypeauditor_youtube_merge'
+    name = 'hypeauditor_youtube'
     allowed_domains = ['hypeauditor.com']
     
-    # 定义所有类别的 URI
+    # Define all category URIs
     categories = {
         "All Categories": "/top-youtube-all-united-states/",
         "ASMR": "/top-youtube-asmr-united-states/",
@@ -41,7 +41,7 @@ class HypeAuditorYouTubeCategoriesSpider(scrapy.Spider):
         # Create or open the CSV file
         self.file = open('hypeauditor_youtube_united_states_all_results.csv', 'w', newline='', encoding='utf-8')
         self.csv_writer = csv.writer(self.file)
-        self.csv_writer.writerow(['rank', 'influencer', 'category', 'followers', 'viewsAvg', 'likesAvg', 'commentsAvg', 'category_2'])
+        self.csv_writer.writerow(['rank', 'contributorContentUsername', 'contributorContentFullname', 'category', 'followers', 'viewsAvg', 'likesAvg', 'commentsAvg', 'category_2'])
 
         # Iterate over all categories and their URIs
         for category, uri in self.categories.items():
@@ -54,23 +54,36 @@ class HypeAuditorYouTubeCategoriesSpider(scrapy.Spider):
         category = response.meta['category']
         self.logger.debug(f"Processing category: {category}")
 
+        # Save the response body to a file for inspection
+        # filename = f"{category.replace(' ', '_').lower()}.html"
+        # with open(filename, 'w') as f:
+        #     f.write(response.body.decode('utf-8'))
+        # self.logger.info(f"Saved response to {filename}")
 
         # Extract data from the table rows
-        rows = response.css('.table .row[data-v-bf890aa6]')
+        rows = response.css('.table .row[data-v-40a1893f]')
+        if not rows:
+            self.logger.warning(f"No rows found for category: {category}")
+
         for row in rows:
             item = HypeAuditorYouTubeCategoryItem()
-            item['rank'] = row.css('.row-cell.rank span[data-v-bf890aa6]::text').get(default='').strip()
-            item['influencer'] = row.css('.contributor__content-username::text').get(default='').strip()
+            item['rank'] = row.css('.row-cell.rank span[data-v-40a1893f]::text').get(default='').strip()
+            item['contributorContentUsername'] = row.css('.contributor__content-username::text').get(default='').strip()
+            item['contributorContentFullname'] = row.css('.contributor__content-fullname::text').get(default='').strip()
             item['category'] = row.css('.row-cell.category .tag__content::text').get(default='').strip()
             item['followers'] = row.css('.row-cell.subscribers::text').get(default='').strip()
             item['viewsAvg'] = row.css('.row-cell.avg-views::text').get(default='').strip()
             item['likesAvg'] = row.css('.row-cell.avg-likes::text').get(default='').strip()
             item['commentsAvg'] = row.css('.row-cell.avg-comments::text').get(default='').strip()
+            
+            # Log the extracted item
+            self.logger.debug(f"Extracted item: {item}")
+
             # Write to the CSV file
             self.csv_writer.writerow([
-                item['rank'], item['influencer'], item['category'],
+                item['rank'], item['contributorContentUsername'], item['contributorContentFullname'], item['category'],
                 item['followers'], item['viewsAvg'], item['likesAvg'], item['commentsAvg'], category
-                ])
+            ])
         
     def closed(self, reason):
         # Close the file when the spider is closed

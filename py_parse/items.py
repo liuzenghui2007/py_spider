@@ -17,7 +17,8 @@ class HypeAuditorItem(scrapy.Item):
 
 class HypeAuditorYouTubeCategoryItem(scrapy.Item):
     rank = scrapy.Field()
-    influencer = scrapy.Field()
+    contributorContentUsername=scrapy.Field()
+    contributorContentFullname=scrapy.Field()
     category = scrapy.Field()
     followers = scrapy.Field()
     viewsAvg= scrapy.Field()

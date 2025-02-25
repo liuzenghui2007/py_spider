@@ -73,9 +73,9 @@ class HypeAuditorCategorySpider(scrapy.Spider):
     def parse(self, response):
         category = response.meta['category']
         
-        for row in response.css('.table .row[data-v-bf890aa6]'):
+        for row in response.css('.table .row[data-v-40a1893f]'):
             item = HypeAuditorItem()
-            item['rank'] = row.css('.row-cell.rank span[data-v-bf890aa6]::text').get(default='').strip()
+            item['rank'] = row.css('.row-cell.rank span[data-v-40a1893f]::text').get(default='').strip()
             item['nick'] = row.css('.contributor__content-username::text').get(default='').strip()
             item['firstName'] = row.css('.contributor__content-fullname::text').get(default='').strip()
             item['category'] = row.css('.row-cell.category .tag__content::text').get(default='').strip()
