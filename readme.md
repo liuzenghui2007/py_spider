@@ -25,7 +25,7 @@ scrapy crawl hypeauditor_category_merge
 scrapy crawl hypeauditor -s USE_PROXIES=True
 
 # 
-scrapy crawl hypeauditor_youtube_categories -s USE_PROXIES=True
+scrapy crawl hypeauditor_youtube_merge
 
 
 
