@@ -14,3 +14,12 @@ class HypeAuditorItem(scrapy.Item):
     country = scrapy.Field()
     engAuth = scrapy.Field()
     engAvg = scrapy.Field()
+
+class HypeAuditorYouTubeCategoryItem(scrapy.Item):
+    rank = scrapy.Field()
+    influencer = scrapy.Field()
+    category = scrapy.Field()
+    followers = scrapy.Field()
+    viewsAvg= scrapy.Field()
+    likesAvg = scrapy.Field()
+    commentsAvg = scrapy.Field()

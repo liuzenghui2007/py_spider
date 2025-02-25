@@ -1,9 +1,9 @@
 import scrapy
-from py_parse.items import HypeAuditorItem
+from py_parse.items import HypeAuditorYouTubeCategoryItem
 import csv
 
 class HypeAuditorYouTubeCategoriesSpider(scrapy.Spider):
-    name = 'hypeauditor_youtube_categories'
+    name = 'hypeauditor_youtube_merge'
     allowed_domains = ['hypeauditor.com']
     
     # 定义所有类别的 URI
@@ -38,6 +38,12 @@ class HypeAuditorYouTubeCategoriesSpider(scrapy.Spider):
 
     def start_requests(self):
         base_url = 'https://hypeauditor.com'
+        # Create or open the CSV file
+        self.file = open('hypeauditor_youtube_united_states_all_results.csv', 'w', newline='', encoding='utf-8')
+        self.csv_writer = csv.writer(self.file)
+        self.csv_writer.writerow(['rank', 'influencer', 'category', 'followers', 'viewsAvg', 'likesAvg', 'commentsAvg', 'category_2'])
+
+        # Iterate over all categories and their URIs
         for category, uri in self.categories.items():
             url = base_url + uri
             yield scrapy.Request(url, callback=self.parse, headers={
@@ -48,27 +54,24 @@ class HypeAuditorYouTubeCategoriesSpider(scrapy.Spider):
         category = response.meta['category']
         self.logger.debug(f"Processing category: {category}")
 
-        # Create or open the CSV file for each category
-        filename = f'hypeauditor_youtube_{category.replace(" ", "_").lower()}.csv'
-        with open(filename, 'w', newline='', encoding='utf-8') as f:
-            csv_writer = csv.writer(f)
-            csv_writer.writerow(['rank', 'channel_name', 'category', 'followers', 'views_avg', 'likes_avg', 'comments_avg'])
 
-            # Extract data from the table rows
-            for row in response.css('.table .row'):
-                item = HypeAuditorItem()
-                item['rank'] = row.css('.rank::text').get(default='').strip()
-                item['channel_name'] = row.css('.channel-name::text').get(default='').strip()
-                item['category'] = category
-                item['followers'] = row.css('.followers::text').get(default='').strip()
-                item['views_avg'] = row.css('.views-avg::text').get(default='').strip()
-                item['likes_avg'] = row.css('.likes-avg::text').get(default='').strip()
-                item['comments_avg'] = row.css('.comments-avg::text').get(default='').strip()
-
-                # Write to the CSV file
-                csv_writer.writerow([
-                    item['rank'], item['channel_name'], item['category'],
-                    item['followers'], item['views_avg'], item['likes_avg'], item['comments_avg']
+        # Extract data from the table rows
+        rows = response.css('.table .row[data-v-bf890aa6]')
+        for row in rows:
+            item = HypeAuditorYouTubeCategoryItem()
+            item['rank'] = row.css('.row-cell.rank span[data-v-bf890aa6]::text').get(default='').strip()
+            item['influencer'] = row.css('.contributor__content-username::text').get(default='').strip()
+            item['category'] = row.css('.row-cell.category .tag__content::text').get(default='').strip()
+            item['followers'] = row.css('.row-cell.subscribers::text').get(default='').strip()
+            item['viewsAvg'] = row.css('.row-cell.avg-views::text').get(default='').strip()
+            item['likesAvg'] = row.css('.row-cell.avg-likes::text').get(default='').strip()
+            item['commentsAvg'] = row.css('.row-cell.avg-comments::text').get(default='').strip()
+            # Write to the CSV file
+            self.csv_writer.writerow([
+                item['rank'], item['influencer'], item['category'],
+                item['followers'], item['viewsAvg'], item['likesAvg'], item['commentsAvg'], category
                 ])
         
-        self.logger.info(f'Saved file {filename}') 
+    def closed(self, reason):
+        # Close the file when the spider is closed
+        self.file.close() 
