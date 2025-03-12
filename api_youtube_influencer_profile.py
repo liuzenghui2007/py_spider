@@ -9,6 +9,33 @@ import re
 import pandas as pd
 import googleapiclient.discovery
 import googleapiclient.errors
+from google.oauth2 import service_account
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+import pickle
+
+# OAuth 2.0 配置
+SCOPES = ['https://www.googleapis.com/auth/youtube.readonly']
+CLIENT_SECRET_FILE = './client_secret_755162217688-0o3oofinpplkfksae81otqho4mm8jd0q.apps.googleusercontent.com.json'  # 替换为你的 JSON 文件路径
+TOKEN_PICKLE_FILE = 'token.pickle'
+
+def get_authenticated_service():
+    creds = None
+    # 检查是否已有有效的凭据
+    if os.path.exists(TOKEN_PICKLE_FILE):
+        with open(TOKEN_PICKLE_FILE, 'rb') as token:
+            creds = pickle.load(token)
+    # 如果没有有效的凭据，进行 OAuth 2.0 流程
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
+            creds = flow.run_local_server(port=0)
+        # 保存凭据以供下次使用
+        with open(TOKEN_PICKLE_FILE, 'wb') as token:
+            pickle.dump(creds, token)
+    return googleapiclient.discovery.build('youtube', 'v3', credentials=creds)
 
 def extract_shopping_domains(links):
     # 定义社交媒体域名
@@ -43,16 +70,8 @@ def extract_shopping_domains(links):
     return shopping_links
 
 def main():
-    # YouTube API 服务名称和版本
-    api_service_name = "youtube"
-    api_version = "v3"
-    
-    # 你的 API Key
-    api_key = "AIzaSyDwOV_XUeKCS5FvP6R3N8PgWMdnhBGOsjY"  # 替换为你的 API Key
-
     # 创建 API 客户端
-    youtube = googleapiclient.discovery.build(
-        api_service_name, api_version, developerKey=api_key)
+    youtube = get_authenticated_service()
 
     # 读取 YouTube influencer CSV 文件
     influencers_df = pd.read_csv('youyou.csv')  # 确保文件路径正确
