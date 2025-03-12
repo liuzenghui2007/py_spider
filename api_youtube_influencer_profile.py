@@ -6,6 +6,7 @@
 
 import os
 import re
+import pandas as pd
 import googleapiclient.discovery
 import googleapiclient.errors
 
@@ -21,49 +22,59 @@ def main():
     youtube = googleapiclient.discovery.build(
         api_service_name, api_version, developerKey=api_key)
 
-    # 发起请求获取频道信息
-    request = youtube.channels().list(
-        part="snippet,contentDetails,statistics",
-        forHandle="@Allure"  # 替换为你想要查询的频道的自定义 URL
-    )
-    response = request.execute()
+    # 读取 YouTube influencer CSV 文件
+    influencers_df = pd.read_csv('youtube influencer.csv')  # 确保文件路径正确
+    results = []
 
-    # 提取所需信息
-    channel_info = response.get('items', [])[0]  # 获取第一个频道的信息
-    title = channel_info['snippet']['title']
-    description = channel_info['snippet']['description']
-    subscribers = channel_info['statistics']['subscriberCount']
-    video_count = channel_info['statistics']['videoCount']
-    view_count = channel_info['statistics']['viewCount']
-    published_at = channel_info['snippet']['publishedAt']
+    for index, row in influencers_df.iterrows():
+        handle = row['contributorContentUsername']  # 使用 'userName' 列
+        
+        # 发起请求获取频道信息
+        request = youtube.channels().list(
+            part="snippet,contentDetails,statistics",
+            forHandle=handle  # 使用 CSV 中的频道自定义 URL
+        )
+        response = request.execute()
 
-    # 提取链接
-    links = re.findall(r'http[s]?://[^\s]+', description)
+        # 提取所需信息
+        if response.get('items'):
+            channel_info = response['items'][0]  # 获取第一个频道的信息
+            title = channel_info['snippet']['title']
+            description = channel_info['snippet']['description']
+            subscribers = channel_info['statistics']['subscriberCount']
+            video_count = channel_info['statistics']['videoCount']
+            view_count = channel_info['statistics']['viewCount']
+            published_at = channel_info['snippet']['publishedAt']
 
-    # 打印频道信息
-    print(f"Channel Title: {title}")
-    print(f"Description: {description}")
-    print(f"Subscribers: {subscribers}")
-    print(f"Video Count: {video_count}")
-    print(f"View Count: {view_count}")
-    print(f"Published At: {published_at}")
+            # 提取链接
+            links = re.findall(r'http[s]?://[^\s]+', description)
 
-    # 打印提取的链接
-    if links:
-        print("Extracted Links:")
-        for link in links:
-            print(link)
+            # 将结果添加到列表
+            results.append({
+                'Handle': handle,
+                'Channel Title': title,
+                'Description': description,
+                'Subscribers': subscribers,
+                'Video Count': video_count,
+                'View Count': view_count,
+                'Published At': published_at,
+                'Links': '\n'.join(links)  # 使用换行符连接链接
+            })
+        else:
+            results.append({
+                'Handle': handle,
+                'Channel Title': None,
+                'Description': None,
+                'Subscribers': None,
+                'Video Count': None,
+                'View Count': None,
+                'Published At': None,
+                'Links': None
+            })
 
-    # 如果你想处理多个频道，可以这样做：
-    # handles = ["@GoogleDevelopers", "@YouTube", "@GoogleCreators"]
-    # for handle in handles:
-    #     request = youtube.channels().list(
-    #         part="snippet,contentDetails,statistics",
-    #         forHandle=handle
-    #     )
-    #     response = request.execute()
-    #     print(f"Channel: {handle}")
-    #     print(response)
+    # 将结果保存到新的 CSV 文件
+    results_df = pd.DataFrame(results)
+    results_df.to_csv('youtube_influencer_results.csv', index=False, encoding='utf-8-sig')
 
 if __name__ == "__main__":
     main()
