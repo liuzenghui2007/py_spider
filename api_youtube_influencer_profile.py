@@ -48,19 +48,20 @@ def main():
     api_version = "v3"
     
     # 你的 API Key
-    api_key = "AIzaSyCEw2Dcj_q4lTKOYz8TLWD-KxJ73DjgwKM"  # 替换为你的 API Key
+    api_key = "AIzaSyDwOV_XUeKCS5FvP6R3N8PgWMdnhBGOsjY"  # 替换为你的 API Key
 
     # 创建 API 客户端
     youtube = googleapiclient.discovery.build(
         api_service_name, api_version, developerKey=api_key)
 
     # 读取 YouTube influencer CSV 文件
-    influencers_df = pd.read_csv('youtube_influencer_results.csv')  # 确保文件路径正确
+    influencers_df = pd.read_csv('youyou.csv')  # 确保文件路径正确
     results = []
 
     for index, row in influencers_df.iterrows():
-        handle = row['Handle']  # 使用 'Handle' 列
-        
+        handle = row['contributorContentFullname']  # 使用 'Handle' 列
+        if pd.isna(handle):  # 跳过空值
+            continue
         # 发起请求获取频道信息
         request = youtube.channels().list(
             part="snippet,contentDetails,statistics",
@@ -118,7 +119,7 @@ def main():
 
     # 将结果保存到新的 CSV 文件
     results_df = pd.DataFrame(results)
-    results_df.to_csv('youtube_influencer_results_with_shopping_links.csv', index=False, encoding='utf-8-sig')
+    results_df.to_csv('youyou2.csv', index=False, encoding='utf-8-sig')
 
 if __name__ == "__main__":
     main()
