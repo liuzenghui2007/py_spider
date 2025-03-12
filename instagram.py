@@ -62,6 +62,7 @@ def is_ecommerce_domain(domains):
         )
         
         result = response.choices[0].message.content.strip()
+        print(f"API Response: {result}")  # Debugging: Print the API response
         if result == "No e-commerce sites":
             return []
         
@@ -107,6 +108,7 @@ def process_csv(input_file, output_file):
             
             # Extract domains
             domains = extract_domains(urls)
+            print(f"Extracted domains: {domains}")  # Debugging: Print extracted domains
             
             # Determine if they are e-commerce sites
             ecommerce_domains = is_ecommerce_domain(domains)
