@@ -76,19 +76,23 @@ def is_ecommerce_domain(domains):
 def process_csv(input_file, output_file):
     """Process CSV file to extract e-commerce domains."""
     try:
-        # Read the CSV file
+        # Read the input CSV file
         df = pd.read_csv(input_file)
         
-        # Ensure correct column names
-        if 'Username' not in df.columns or 'Bio Links' not in df.columns:
-            print("CSV file must contain 'Username' and 'Bio Links' columns")
-            return
-        
-        # Add new column
-        df['E-commerce Domains'] = None
-        
+        # Check if output file exists and load it
+        if os.path.exists(output_file):
+            df_output = pd.read_csv(output_file)
+            processed_indices = df_output[df_output['E-commerce Domains'].notna()].index
+        else:
+            df_output = df.copy()
+            df_output['E-commerce Domains'] = None
+            processed_indices = []
+
         # Iterate over each row
         for index, row in df.iterrows():
+            if index in processed_indices:
+                continue  # Skip already processed rows
+
             username = row['Username']
             bio_links = row['Bio Links']
             
@@ -109,13 +113,18 @@ def process_csv(input_file, output_file):
             
             # Update DataFrame
             if ecommerce_domains:
-                df.at[index, 'E-commerce Domains'] = '\n'.join(ecommerce_domains)
+                df_output.at[index, 'E-commerce Domains'] = '\n'.join(ecommerce_domains)
+            
+            # Save progress every 10 rows
+            if (index + 1) % 10 == 0:
+                df_output.to_csv(output_file, index=False)
+                print(f"Progress saved to {output_file}")
             
             # Avoid API rate limits
             time.sleep(delay)
         
-        # Save results
-        df.to_csv(output_file, index=False)
+        # Final save
+        df_output.to_csv(output_file, index=False)
         print(f"Processing complete, results saved to {output_file}")
     
     except Exception as e:
