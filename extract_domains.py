@@ -1,5 +1,4 @@
-import re
-from urllib.parse import urlparse
+import tldextract
 
 def extract_domains(file_path):
     domains = set()  # 使用集合来自动处理重复的域名
@@ -11,23 +10,17 @@ def extract_domains(file_path):
             if not url:
                 continue
                 
-            # 确保 URL 有协议前缀
-            if not url.startswith(('http://', 'https://')):
-                url = 'http://' + url
-                
             try:
-                # 使用 urlparse 提取域名
-                parsed_url = urlparse(url)
-                domain = parsed_url.netloc or parsed_url.path
+                # 使用 tldextract 提取域名
+                ext = tldextract.extract(url)
                 
-                # 去掉 www 前缀
-                if domain.startswith('www.'):
-                    domain = domain.replace('www.', '', 1)
-                    
-                # 去掉路径部分（如果没有正确解析）
-                domain = domain.split('/')[0]
-                
-                if domain:
+                # 组合子域名、域名和顶级域名，但排除 www 子域名
+                if ext.domain and ext.suffix:
+                    # 如果有子域名且不是 www，则包含它
+                    if ext.subdomain and ext.subdomain != 'www':
+                        domain = f"{ext.subdomain}.{ext.domain}.{ext.suffix}"
+                    else:
+                        domain = f"{ext.domain}.{ext.suffix}"
                     domains.add(domain)
             except Exception as e:
                 print(f"处理 URL 时出错: {url}, 错误: {e}")
@@ -37,6 +30,13 @@ def extract_domains(file_path):
 def main():
     input_file = 'url.txt'  # 输入文件
     output_file = 'unique_domains.txt'  # 输出文件
+
+    # 确保已安装 tldextract
+    try:
+        import tldextract
+    except ImportError:
+        print("请先安装 tldextract 库: pip install tldextract")
+        return
 
     unique_domains = extract_domains(input_file)
 
