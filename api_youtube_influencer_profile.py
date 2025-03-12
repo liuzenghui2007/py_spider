@@ -59,9 +59,16 @@ def main():
     results = []
 
     for index, row in influencers_df.iterrows():
-        handle = row['contributorContentFullname']  # 使用 'Handle' 列
+        # 跳过前79行
+        if index < 79 or index > 90:
+            continue
+            
+        handle = row['contributorContentUsername']  # 使用 'Handle' 列
         if pd.isna(handle):  # 跳过空值
             continue
+            
+        print(f"\nProcessing row {index + 1}: {handle}")  # 显示当前处理的行
+        
         # 发起请求获取频道信息
         request = youtube.channels().list(
             part="snippet,contentDetails,statistics",
@@ -79,6 +86,11 @@ def main():
             view_count = channel_info['statistics']['viewCount']
             published_at = channel_info['snippet']['publishedAt']
 
+            print(f"Found channel: {title}")
+            print(f"Subscribers: {subscribers}")
+            print(f"Video Count: {video_count}")
+            print(f'description', {description})
+
             # 提取链接
             links = re.findall(r'http[s]?://[^\s]+', description)
             
@@ -91,6 +103,9 @@ def main():
 
             # 提取购物链接
             shopping_links = extract_shopping_domains(cleaned_links)
+            
+            if shopping_links:
+                print(f"Found {len(shopping_links)} shopping links")
 
             # 将结果添加到列表
             results.append({
