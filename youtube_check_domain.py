@@ -3,6 +3,7 @@ import tldextract
 import openai
 import time
 import os
+from datetime import datetime, timedelta
 
 # Configuration
 input_file = 'youtube influencer-youtube filter.csv'
@@ -88,12 +89,28 @@ def process_csv(input_file, output_file):
         # Add new column
         df['E-commerce Domains'] = None
         
+        # 记录开始时间
+        start_time = time.time()
+        total_rows = len(df)
+        
         # Iterate over each row
         for index, row in df.iterrows():
             username = row['Username']
             bio_links = row['Bio Links']
             
-            print(f"Processing user {username} ({index+1}/{len(df)})")
+            # 计算已处理时间和预计剩余时间
+            elapsed_time = time.time() - start_time
+            avg_time_per_row = elapsed_time / (index + 1) if index > 0 else 0
+            remaining_rows = total_rows - (index + 1)
+            estimated_remaining_time = avg_time_per_row * remaining_rows
+            
+            # 格式化时间显示
+            elapsed_str = str(timedelta(seconds=int(elapsed_time)))
+            remaining_str = str(timedelta(seconds=int(estimated_remaining_time)))
+            
+            print(f"\nProcessing user {username} ({index+1}/{total_rows})")
+            print(f"Elapsed time: {elapsed_str}")
+            print(f"Estimated remaining time: {remaining_str}")
             
             # Skip if Bio Links is empty
             if pd.isna(bio_links) or not bio_links:
@@ -104,7 +121,7 @@ def process_csv(input_file, output_file):
             
             # Extract domains
             domains = extract_domains(urls)
-            print(f"Extracted domains: {domains}")  # Debugging output
+            print(f"Extracted domains: {domains}")
             
             # Determine if they are e-commerce sites
             ecommerce_domains = is_ecommerce_domain(domains)
@@ -122,6 +139,11 @@ def process_csv(input_file, output_file):
             
             # Avoid API rate limits
             time.sleep(delay)
+        
+        # 计算总耗时
+        total_time = time.time() - start_time
+        total_time_str = str(timedelta(seconds=int(total_time)))
+        print(f"\nTotal processing time: {total_time_str}")
         
         # Final save
         df.to_csv(output_file, index=False, encoding='utf-8-sig')
