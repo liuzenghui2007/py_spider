@@ -62,7 +62,7 @@ def is_ecommerce_domain(domains):
         )
         
         result = response.choices[0].message.content.strip()
-        print(f"API Response: {result}")  # Debugging: Print the API response
+        print(f"API Response: {result}")  # Debugging output
         if result == "No e-commerce sites":
             return []
         
@@ -77,23 +77,19 @@ def is_ecommerce_domain(domains):
 def process_csv(input_file, output_file):
     """Process CSV file to extract e-commerce domains."""
     try:
-        # Read the input CSV file
+        # Read the CSV file
         df = pd.read_csv(input_file)
         
-        # Check if output file exists and load it
-        if os.path.exists(output_file):
-            df_output = pd.read_csv(output_file)
-            processed_indices = df_output[df_output['E-commerce Domains'].notna()].index
-        else:
-            df_output = df.copy()
-            df_output['E-commerce Domains'] = None
-            processed_indices = []
-
+        # Ensure correct column names
+        if 'Username' not in df.columns or 'Bio Links' not in df.columns:
+            print("CSV file must contain 'Username' and 'Bio Links' columns")
+            return
+        
+        # Add new column
+        df['E-commerce Domains'] = None
+        
         # Iterate over each row
         for index, row in df.iterrows():
-            if index in processed_indices:
-                continue  # Skip already processed rows
-
             username = row['Username']
             bio_links = row['Bio Links']
             
@@ -108,25 +104,27 @@ def process_csv(input_file, output_file):
             
             # Extract domains
             domains = extract_domains(urls)
-            print(f"Extracted domains: {domains}")  # Debugging: Print extracted domains
+            print(f"Extracted domains: {domains}")  # Debugging output
             
             # Determine if they are e-commerce sites
             ecommerce_domains = is_ecommerce_domain(domains)
             
             # Update DataFrame
             if ecommerce_domains:
-                df_output.at[index, 'E-commerce Domains'] = '\n'.join(ecommerce_domains)
+                df.at[index, 'E-commerce Domains'] = '\n'.join(ecommerce_domains)
+            else:
+                df.at[index, 'E-commerce Domains'] = 'No e-commerce sites'
             
             # Save progress every 10 rows
             if (index + 1) % 10 == 0:
-                df_output.to_csv(output_file, index=False)
+                df.to_csv(output_file, index=False, encoding='utf-8-sig')
                 print(f"Progress saved to {output_file}")
             
             # Avoid API rate limits
             time.sleep(delay)
         
         # Final save
-        df_output.to_csv(output_file, index=False)
+        df.to_csv(output_file, index=False, encoding='utf-8-sig')
         print(f"Processing complete, results saved to {output_file}")
     
     except Exception as e:
