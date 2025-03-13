@@ -27,9 +27,19 @@ colors = [
 
 # 修改后的画图部分
 plt.figure(figsize=(10, 10))
+ax = plt.gca()
+
 for i, (name, points) in enumerate(regions):
-    poly = Polygon(points, alpha=0.3, label=name, facecolor=colors[i])  # 添加颜色参数
-    plt.gca().add_patch(poly)
+    poly = Polygon(points, alpha=0.3, label=name, facecolor=colors[i])
+    ax.add_patch(poly)
+    
+    # 计算多边形的中心点
+    x_coords, y_coords = zip(*points)
+    centroid_x = sum(x_coords) / len(points)
+    centroid_y = sum(y_coords) / len(points)
+    
+    # 在多边形中心添加标签
+    plt.text(centroid_x, centroid_y, name, ha='center', va='center', fontsize=10, color='black')
 
 # 设置图表范围和标签
 plt.xlim(-10, 20)
