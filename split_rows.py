@@ -1,5 +1,8 @@
 import pandas as pd
 import csv
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
 
 def clean_url(url):
     """清理URL字符串"""
@@ -99,3 +102,33 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# 定义实验状态区域和对应的颜色
+regions = [
+    ("维持无孔 (A)", [(0, 0), (0, 0.5), (0.5, 0.5), (0.5, 0)]),
+    ("新成膜 (B)", [(0, 1), (0, 0.1), (0.1, 0.1), (0.1, 8.1), (0.1, 20), (0, 20)]),
+    ("维持有膜无孔 (C)", [(0.1, 1), (10, 10), (10, 1), (0.1, 1)]),
+    ("新嵌单孔 (D)", [(0.1, 8.1), (8, 8.1), (8, 20), (0.1, 20)]),
+    ("维持有膜无孔 (E)", [(10, 10), (20, 20), (20, 10), (10, 10)]),
+    ("孔脱落 (F)", [(10, 0.1), (20, 0.1), (20, -8), (10, -8)]),
+    ("膜脱落 (G)", [(0, -8), (0, 0.1), (20, 0.1), (20, -8)])
+]
+
+# 更新颜色定义，确保B和F的颜色不同
+colors = ['#FF9999', '#66B3FF', '#99FF99', '#FFD700', '#FF00FF', '#FFA500', '#8A2BE2']
+
+# 绘制多边形
+plt.figure()
+for i, (name, points) in enumerate(regions):
+    poly = Polygon(points, alpha=0.3, label=name, facecolor=colors[i])
+    plt.gca().add_patch(poly)
+
+# 设置图形属性
+plt.xlim(0, 20)
+plt.ylim(0, 20)
+plt.xlabel("Cap1 (x)")
+plt.ylabel("Cap2 (y)")
+plt.title("实验状态区域示意图")
+plt.legend(loc='upper right')
+plt.grid(True)
+plt.show()
